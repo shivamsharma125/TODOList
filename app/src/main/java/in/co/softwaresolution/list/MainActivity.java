@@ -1,13 +1,18 @@
 package in.co.softwaresolution.list;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,44 +45,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        InfoOpenHelper openHelper=new InfoOpenHelper(this);
+        SQLiteDatabase database=openHelper.getReadableDatabase();
+        Cursor cursor=database.query(Contract.Info.TABLE_NAME,null,null,null,null,null,null);
+        Log.d("MyActivityBeforeCursor","Hello");
+        while (cursor.moveToNext())
+        {
+            int id = cursor.getInt(cursor.getColumnIndex(Contract.Info.CLOUMN_ID));
+            String title=cursor.getString(cursor.getColumnIndex(Contract.Info.COLUMN_TITLE));
+            String description=cursor.getString(cursor.getColumnIndex(Contract.Info.COLUMN_DESCRIPTION));
+            Info info=new Info(title,description);
+            info.setId(id);
+            Log.d("MyActivityAfterCursor","Hello");
+            items.add(info);
+        }
         listView=findViewById(R.id.listviewID);
 
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        sharedPreferences=getSharedPreferences(PREFERENCE,MODE_PRIVATE);
-        String str=sharedPreferences.getString(STRING_KEY,null);
-        if(str!=null)
-        {
-            setString(str);
-        }
 
-        editor=sharedPreferences.edit();
 
         dialogAdapter=new DialogAdapter(MainActivity.this,items);
         listView.setAdapter(dialogAdapter);
 
     }
 
-    public void setString(String str)
-    {
-        String title;
-        String description;
-        for(int i=0;i<str.length();)
-        {
-
-                int n=str.indexOf(":",i);
-                title=str.substring(i,n);
-
-                i=n+1;
-
-                n=str.indexOf("/",i);
-                description=str.substring(i,n);
-                i=n+1;
-                Info info=new Info(title,description);
-                items.add(info);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,11 +108,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 {
                     Info info=new Info(title,description);
                     items.add(info);
-                    string=string.concat(title).concat(":").concat(description).concat("/");
-                    editor.putString(STRING_KEY,string);
-                    editor.commit();
-                    dialogAdapter=new DialogAdapter(MainActivity.this,items);
-                   listView.setAdapter(dialogAdapter);
+                    InfoOpenHelper openHelper=new InfoOpenHelper(this);
+                    SQLiteDatabase database=openHelper.getWritableDatabase();
+                    ContentValues contentValues=new ContentValues();
+                    Log.d("MyActivityTitle",title);
+                    Log.d("MyActivityDescription",description);
+                    contentValues.put(Contract.Info.COLUMN_TITLE,title);
+                    contentValues.put(Contract.Info.COLUMN_DESCRIPTION,description);
+                    long id = database.insert(Contract.Info.TABLE_NAME,null,contentValues);
+                    if(id > -1)
+                    {
+                        info.setId(id);
+                    }
+                    dialogAdapter.notifyDataSetChanged();
 
                 }
             }
@@ -131,17 +132,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 Bundle bundle=data.getExtras();
                 Info info=items.get(bundle.getInt(POSITION));
-                String title=info.getTitle();
-                String description=info.getDescription();
-                String oldstr="";
-                oldstr=oldstr.concat(title).concat(":").concat(description).concat("/");
                 info.setTitle(bundle.getString(TITLE_KEY));
                 info.setDescription(bundle.getString(DESCRIPTION_KEY));
-                String str="";
-                str=str.concat(info.getTitle()).concat(":").concat(info.getDescription()).concat("/");
-                string=string.replace(oldstr,str);
-                editor.putString(STRING_KEY,string);
-                editor.commit();
                 dialogAdapter.notifyDataSetChanged();
             }
         }
@@ -172,12 +164,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                String str="";
-                Info info=items.get(position);
-                str=str.concat(info.getTitle()).concat(":").concat(info.getDescription()).concat("/");
-                string=string.replace(str,"");
-                editor.putString(STRING_KEY,string);
-                editor.commit();
+                InfoOpenHelper openHelper=new InfoOpenHelper(MainActivity.this);
+                SQLiteDatabase database=openHelper.getWritableDatabase();
+                String[] selectionArgs={items.get(position).getId()+""};
+                database.delete(Contract.Info.TABLE_NAME,"id = ?",selectionArgs);
                 items.remove(position);
                 dialogAdapter.notifyDataSetChanged();
 

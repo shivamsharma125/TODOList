@@ -25,33 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<Button-->
-            <!--android:id="@+id/dateID"-->
-            <!--android:onClick="updateActivity"-->
-            <!--android:text="DATE"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:layout_marginLeft="60dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-
-        <!--<Button-->
-            <!--android:id="@+id/timeID"-->
-            <!--android:onClick="updateActivity"-->
-            <!--android:text="TIME"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:layout_marginLeft="40dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-        <!---->
-    <!--</LinearLayout>-->
-
     <Button
-        android:id="@+id/saveID"
         android:onClick="updateActivity"
         android:text="Save"
         android:layout_marginTop="15dp"
