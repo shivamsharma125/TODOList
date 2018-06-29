@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightblue"
+    android:orientation="vertical"
+    tools:context=".DetailsActivity">
+
+    <TextView
+        android:text="Shivam Sharma"
+        android:id="@+id/detailsactivitytitleID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/green"
+        android:textColor="@color/yellow"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:text="Hello"
+        android:id="@+id/detailsactivitydescriptionID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/green"
+        android:textColor="@color/yellow"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"/>
+
+</LinearLayout>
