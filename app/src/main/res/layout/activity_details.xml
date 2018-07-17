@@ -9,7 +9,6 @@
     tools:context=".DetailsActivity">
 
     <TextView
-        android:text="Shivam Sharma"
         android:id="@+id/detailsactivitytitleID"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -21,7 +20,6 @@
         android:textStyle="bold|italic"/>
 
     <TextView
-        android:text="Hello"
         android:id="@+id/detailsactivitydescriptionID"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -32,4 +30,25 @@
         android:textSize="25dp"
         android:textStyle="bold|italic"/>
 
+    <TextView
+        android:id="@+id/detailsactivitydateID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/green"
+        android:textColor="@color/yellow"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:id="@+id/detailsactivitytimeID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/green"
+        android:textColor="@color/yellow"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"/>
 </LinearLayout>

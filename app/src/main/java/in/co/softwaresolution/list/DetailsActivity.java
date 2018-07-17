@@ -1,9 +1,12 @@
 package in.co.softwaresolution.list;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -14,20 +17,39 @@ public class DetailsActivity extends AppCompatActivity {
     Bundle bundle;
     TextView title;
     TextView description;
+    TextView date;
+    TextView time;
+    int id;
+    SQLiteDatabase database;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        Intent intent = getIntent();
-        bundle = intent.getExtras();
+        Log.d("DetailsActivity","from onCreate method");
+
+            Intent intent = getIntent();
+            id=intent.getIntExtra(MainActivity.ID_KEY,0);
+
+            InfoOpenHelper openHelper=InfoOpenHelper.getInstance(this);
+            database=openHelper.getReadableDatabase();
+
+        String[] selectionArguments={id+""};
+        cursor=database.query(Contract.Info.TABLE_NAME,null,"id = ?",selectionArguments,null,null,null);
 
         title = findViewById(R.id.detailsactivitytitleID);
         description = findViewById(R.id.detailsactivitydescriptionID);
+        date=findViewById(R.id.detailsactivitydateID);
+        time=findViewById(R.id.detailsactivitytimeID);
 
-        title.setText(bundle.getString(MainActivity.TITLE_KEY));
-        description.setText(bundle.getString(MainActivity.DESCRIPTION_KEY));
+        if(cursor.moveToNext()) {
+            title.setText(cursor.getString(cursor.getColumnIndex(Contract.Info.COLUMN_TITLE)));
+            description.setText(cursor.getString(cursor.getColumnIndex(Contract.Info.COLUMN_DESCRIPTION)));
+            date.setText(cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_DAY)) + "/" + cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_MONTH)) + "/" + cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_YEAR)));
+            time.setText(cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_HOUR)) + ":" + cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_MIN)) + ":" + cursor.getInt(cursor.getColumnIndex(Contract.Info.COLUMN_SECOND)));
+        }
 
     }
 
@@ -46,29 +68,19 @@ public class DetailsActivity extends AppCompatActivity {
         if(id == R.id.detailsmenuID)
         {
             Intent intent=new Intent(this,EditActivity.class);
-            intent.putExtras(bundle);
-            startActivityForResult(intent,MainActivity.REQUEST_CODE_EDIT_MENU);
+            intent.putExtra(MainActivity.ID_KEY,this.id);
+            startActivity(intent);
+            finish();
         }
 
         return true;
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == MainActivity.REQUEST_CODE_EDIT_MENU)
-        {
-            if(resultCode == EditActivity.RESULT_CODE_EDIT_MENU)
-            {
-                bundle=data.getExtras();
-                title.setText(bundle.getString(MainActivity.TITLE_KEY));
-                description.setText(bundle.getString(MainActivity.DESCRIPTION_KEY));
-                Intent intent=new Intent();
-                intent.putExtras(bundle);
-                setResult(DETAILS_ACTIVITY_RESULT_CODE,intent);
-            }
-        }
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

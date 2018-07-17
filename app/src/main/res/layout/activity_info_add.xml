@@ -25,10 +25,42 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:text="DATE"
+            android:id="@+id/datePickerID"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="70dp"/>
+
+        <Button
+            android:text="TIME"
+            android:id="@+id/timePickerID"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"/>
+
+        <Button
+            android:text="+30sec"
+            android:id="@+id/increaseInSecondsID"
+            android:layout_width="50dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginLeft="5dp"
+            android:layout_height="55dp" />
+
+    </LinearLayout>
+
     <Button
+        android:id="@+id/infoAddsaveID"
         android:onClick="updateActivity"
         android:text="Save"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="150dp"
         android:background="@color/purple"
         android:layout_width="wrap_content"
